@@ -68,8 +68,8 @@ class HecktorEvaluator:
         for path in groundtruth_paths:
             patient_id = path.name.split(".")[0]
             prediction_files = [
-                f
-                for f in submission_extraction_folder.rglob(patient_id + "*.nii.gz")
+                f for f in submission_extraction_folder.rglob(patient_id +
+                                                              "*.nii.gz")
             ]
             if len(prediction_files) > 1:
                 raise Exception(
@@ -125,14 +125,16 @@ class HecktorEvaluator:
         messages = list()
         if len(unresampled_patients) > 0:
             messages.append(
-                f"The following patient(s) was/were not resampled back"
-                " to the original resolution: {unresampled_patients}."
-                "\nWe applied a nearest neighbor resampling.\n")
+                "The following patient(s) was/were not resampled back"
+                " to the original resolution: {patients}."
+                "\nWe applied a nearest neighbor resampling.\n".format(
+                    patients=unresampled_patients))
 
         if len(missing_patients) > 0:
             messages.append(
-                f"The following patient(s) was/were missing: {missing_patients}."
-                "\nA score of 0 was attributed to them")
+                "The following patient(s) was/were missing: {patients}."
+                "\nA score of 0 was attributed to them".format(
+                    patients=missing_patients))
         _result_object["message"] = "".join(messages)
         return _result_object
 
