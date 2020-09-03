@@ -96,6 +96,12 @@ class HecktorEvaluator:
             np_volume_gt, px_spacing_gt, origin_gt = get_np_volume_from_sitk(
                 sitk_image_gt)
 
+            if np.sum(np.where((np_volume_pred != 0) & (np_volume_pred != 1))) != 0:
+                raise Exception(
+                    "The mask provided contain other values than 0 or 1, please provide binary masks")
+            np_volume_pred = np_volume_pred != 0
+            np_volume_gt = np_volume_gt != 0
+
             bb = (bb_df.loc[patient_id, "x1"], bb_df.loc[patient_id, "y1"],
                   bb_df.loc[patient_id, "z1"], bb_df.loc[patient_id, "x2"],
                   bb_df.loc[patient_id, "y2"], bb_df.loc[patient_id, "z2"])
@@ -144,7 +150,7 @@ if __name__ == "__main__":
     bounding_boxes_file = "data/bboxes.csv"
     _client_payload = {}
     _client_payload[
-        "submission_file_path"] = "data/sample_submission_missing.zip"
+        "submission_file_path"] = "data/sample_submission.zip"
     _client_payload["aicrowd_submission_id"] = 1123
     _client_payload["aicrowd_participant_id"] = 1234
 
